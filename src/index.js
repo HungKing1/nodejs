@@ -5,26 +5,24 @@ const handlebars = require('express-handlebars')
 const app = express()
 const port = 3000
 
-//__dirname tại resources 
+const route = require('./routes')//lấy file trong routes 
+//controller -> news -> index(route) -> index(src)
+
 app.use(express.static(path.join(__dirname, 'resources/public')))
-
-//http logger
-app.use(morgan('combined'))
-
-//tempplate engine 
+app.use(express.urlencoded({
+  extended: true
+})) 
+app.use(express.json())
+ 
 app.engine('hbs', handlebars.engine({
   extname: '.hbs'
 }))
+
 app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, 'resources/views'))
 
-//định nghĩa tuyến đường    
-app.get('/', (req, res) => {
-  res.render('home')
-})
-app.get('/news', (req, res) => {
-  res.render('news')
-})
+//routes init
+route(app)
 
 //127.0.0.1 -> localhost 
 app.listen(port, () => {
